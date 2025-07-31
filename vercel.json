@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/agentsee", "destination": "/index.html" },
+    { "source": "/agentsee/(.*)", "destination": "/index.html" },
     { "source": "/thread", "destination": "/thread.html" }
   ]
 }
