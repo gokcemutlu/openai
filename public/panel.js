@@ -1,34 +1,23 @@
-let currentAction = null;
+// ✅ public/panel.js
+window.addEventListener("DOMContentLoaded", () => {
+  const actionList = document.getElementById("actionList");
+  const detailsPanel = document.getElementById("detailsPanel");
 
-function loadActions() {
-  const container = document.getElementById("action-list");
   mockActions.forEach(action => {
-    const div = document.createElement("div");
-    div.className = "action-item";
-    div.innerText = action.title + " (" + action.status + ")";
-    div.onclick = () => showDetails(action);
-    container.appendChild(div);
+    const li = document.createElement("li");
+    li.textContent = `${action.title} (${action.status})`;
+    li.style.cursor = "pointer";
+    li.onclick = () => {
+      detailsPanel.innerHTML = `
+        <h2>Action Details</h2>
+        <p>Status: ${action.status}</p>
+        <ul>${action.events.map(e => `<li>${e}</li>`).join("")}</ul>
+        ${mockThreads[action.id]
+          .map(msg => `<p><strong>${msg.from}:</strong> ${msg.text}</p>`)
+          .join("")}
+        <button onclick="window.location='/thread.html'">Open Full Email Thread</button>
+      `;
+    };
+    actionList.appendChild(li);
   });
-}
-
-function showDetails(action) {
-  currentAction = action;
-  document.getElementById("status-box").innerText = "Status: " + action.status;
-  document.getElementById("events-box").innerHTML = "<ul>" + action.events.map(e => `<li>${e}</li>`).join("") + "</ul>";
-
-  const thread = mockThreads[action.id] || [];
-  const threadDiv = document.getElementById("thread-box");
-  threadDiv.innerHTML = thread.map(email =>
-    `<div><strong>${email.from}:</strong> ${email.text}</div>`
-  ).join("<hr>");
-
-  document.getElementById("thread-button").style.display = "inline-block";
-}
-
-function openThreadView() {
-  if (currentAction) {
-    window.location.href = "views/thread.html?action=" + currentAction.id;
-  }
-}
-
-window.onload = loadActions;
+});
