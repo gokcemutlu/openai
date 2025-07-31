@@ -1,4 +1,3 @@
-
 const mockActions = [
   { id: "act1", title: "Cancel Flight", status: "pending", events: ["Intent matched", "Waiting for airline response"] },
   { id: "act2", title: "Retrieve Invoice", status: "completed", events: ["PDF generated", "Email sent to user"] },
