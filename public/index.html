@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AgentSee Panel</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgentSee</title>
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-  <div class="left-panel">
-    <h3>Agent Actions</h3>
-    <div id="action-list"></div>
-  </div>
-  <div class="right-panel">
-    <h3>Action Details</h3>
-    <div class="details-box" id="status-box">Select an action</div>
-    <div class="details-box" id="events-box"></div>
-    <div class="details-box email-thread" id="thread-box"></div>
-    <button onclick="openThreadView()" id="thread-button" style="display:none;">Open Full Email Thread</button>
+  <div class="app-container">
+    <div class="sidebar">
+      <h2>Agent Actions</h2>
+      <ul id="actionList"></ul>
+    </div>
+    <div class="main-panel" id="detailsPanel">
+      <h2>Action Details</h2>
+      <p>Select an action to view details</p>
+    </div>
   </div>
   <script src="data.js"></script>
   <script src="panel.js"></script>
