@@ -1,34 +1,28 @@
-let currentAction = null;
+window.onload = function () {
+  const list = document.getElementById("actionList");
+  const panel = document.getElementById("detailsPanel");
 
-function loadActions() {
-  const container = document.getElementById("action-list");
   mockActions.forEach(action => {
-    const div = document.createElement("div");
-    div.className = "action-item";
-    div.innerText = action.title + " (" + action.status + ")";
-    div.onclick = () => showDetails(action);
-    container.appendChild(div);
+    const li = document.createElement("li");
+    li.textContent = `${action.title} (${action.status})`;
+    li.onclick = () => showDetails(action);
+    list.appendChild(li);
   });
-}
 
-function showDetails(action) {
-  currentAction = action;
-  document.getElementById("status-box").innerText = "Status: " + action.status;
-  document.getElementById("events-box").innerHTML = "<ul>" + action.events.map(e => `<li>${e}</li>`).join("") + "</ul>";
-
-  const thread = mockThreads[action.id] || [];
-  const threadDiv = document.getElementById("thread-box");
-  threadDiv.innerHTML = thread.map(email =>
-    `<div><strong>${email.from}:</strong> ${email.text}</div>`
-  ).join("<hr>");
-
-  document.getElementById("thread-button").style.display = "inline-block";
-}
-
-function openThreadView() {
-  if (currentAction) {
-    window.location.href = "views/thread.html?action=" + currentAction.id;
+  function showDetails(action) {
+    const thread = mockThreads[action.id] || [];
+    panel.innerHTML = `
+      <h2>${action.title}</h2>
+      <p><strong>Status:</strong> ${action.status}</p>
+      <ul>${action.events.map(e => `<li>${e}</li>`).join("")}</ul>
+      <div>
+        ${thread.map(email => `
+          <div class="email-block">
+            <strong>${email.from}</strong>
+            <span>${email.text}</span>
+          </div>`).join("")}
+      </div>
+      <button onclick="window.location.href='/thread'">Open Full Email Thread</button>
+    `;
   }
-}
-
-window.onload = loadActions;
+};
