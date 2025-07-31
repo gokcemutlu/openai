@@ -5,16 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Front AI Agent Plugin Demo</title>
   <script src="https://unpkg.com/@frontapp/ui-sdk"></script>
+  <style>
+    body { font-family: sans-serif; padding: 1rem; background: #f9f9f9; }
+    .task-panel { background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.1); margin-bottom: 1rem; }
+    .status { font-weight: bold; margin-bottom: 0.5rem; }
+    .auto { color: green; } .semi { color: orange; } .manual { color: #555; }
+    .task-type { font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .suggestion { margin-bottom: 1rem; }
+    button { padding: 0.5rem 1rem; margin-right: 0.5rem; border: none; border-radius: 5px; cursor: pointer; }
+    .approve { background: #4CAF50; color: white; }
+    .open-dashboard { background: #007bff; color: white; }
+    .handled-tag { font-size: 0.8rem; padding: 0.2rem 0.5rem; background: #e0ffe0; border-radius: 5px; display: inline-block; margin-top: 0.5rem; }
+  </style>
 </head>
 <body>
-  <h2>Hello from Front Plugin</h2>
+  <div id="app">Loading task...</div>
   <script>
     Frontend.init();
-    Frontend.context().then(ctx => {
-      document.body.innerHTML += '<p>Conversation ID: ' + (ctx?.conversation?._id || 'Mock') + '</p>';
-    }).catch(() => {
-      document.body.innerHTML += '<p>Mock Mode</p>';
-    });
-  </script>
-</body>
-</html>
+
+    function renderTaskUI(task) {
+      const app = document.getElementById("app");
+      const colorClass = task.status === "automated" ? "auto" :
+                         task.status === "semi_automated" ? "semi" : "manual";
