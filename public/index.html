@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Front AI Agent Plugin Demo</title>
-  <script src="https://unpkg.com/@frontapp/ui-sdk"></script>
+  <title>Agent Task Panel Demo (Standalone)</title>
   <style>
     body { font-family: sans-serif; padding: 1rem; background: #f9f9f9; }
+    select { padding: 0.5rem; margin-bottom: 1rem; }
     .task-panel { background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.1); margin-bottom: 1rem; }
     .status { font-weight: bold; margin-bottom: 0.5rem; }
     .auto { color: green; } .semi { color: orange; } .manual { color: #555; }
@@ -19,11 +19,59 @@
   </style>
 </head>
 <body>
-  <div id="app">Loading task...</div>
-  <script>
-    Frontend.init();
+  <h2>Agent Task Panel (Standalone Demo)</h2>
+  <label for="taskSelect">Choose a task:</label>
+  <select id="taskSelect" onchange="onSelectTask()">
+    <option value="conv_001">🛫 Flight Booking (Semi-Automated)</option>
+    <option value="conv_002">🧾 Invoice Retrieval (Automated)</option>
+    <option value="conv_003">🏨 Hotel Change Request (Manual)</option>
+  </select>
 
+  <div id="app">Select a task to see the panel.</div>
+
+  <script>
     function renderTaskUI(task) {
       const app = document.getElementById("app");
       const colorClass = task.status === "automated" ? "auto" :
                          task.status === "semi_automated" ? "semi" : "manual";
+
+      app.innerHTML = `
+        <div class="task-panel">
+          <div class="task-type">🛫 ${task.type.replace("_", " ").toUpperCase()}</div>
+          <div class="status ${colorClass}">Status: ${task.status.replace("_", " ").toUpperCase()}</div>
+          <div class="suggestion">${task.suggestion}</div>
+          ${task.status === "semi_automated" ? '<button class="approve" onclick="alert(\'Approved\')">Approve and Send</button>' : ''}
+          ${task.status !== "automated" ? '<button class="open-dashboard" onclick="window.open(\'https://your-agent-dashboard.com/task/123\', \'_blank\')">Open in Task Console</button>' : ''}
+          ${task.status === "automated" ? '<div class="handled-tag">✅ Handled Automatically</div>' : ''}
+        </div>`;
+    }
+
+    function onSelectTask() {
+      const selected = document.getElementById("taskSelect").value;
+      fetchTaskFor(selected);
+    }
+
+    function fetchTaskFor(conversationId) {
+      const mockData = {
+        "conv_001": {
+          type: "flight_booking",
+          status: "semi_automated",
+          suggestion: "Suggests booking Madrid → Amsterdam on Aug 15 at €142"
+        },
+        "conv_002": {
+          type: "invoice_retrieval",
+          status: "automated",
+          suggestion: "Invoice for Booking #223489 has been retrieved."
+        },
+        "conv_003": {
+          type: "hotel_change",
+          status: "manual",
+          suggestion: "Suggests finding 3 quieter hotel options near the original booking."
+        }
+      };
+      const task = mockData[conversationId] || mockData["conv_001"];
+      renderTaskUI(task);
+    }
+  </script>
+</body>
+</html>
